@@ -20,8 +20,8 @@ except ModuleNotFoundError:
 
 upstream = "https://codeberg.org/tenplus1/mobs_monster"
 ref = "master"
-mob_name = "tree_monster"
-mob_title = "Tree Monster"
+mob_name = "dirt_monster"
+mob_title = "Dirt Monster"
 
 
 def getRefUrl(path):
@@ -86,9 +86,9 @@ def updateNamespace(target):
 		"	asm.addEgg({",
 		"		name = \"{}\",".format(mob_name),
 		"		title = S(\"{}\"),".format(mob_title),
-		"		inventory_image = \"default_tree_top.png\",",
+		"		inventory_image = \"default_dirt.png\",",
 		"		spawn = \"mobs:{}\",".format(mob_name),
-		"		ingredients = \"default:tree\",",
+		"		ingredients = \"default:dirt\",",
 		"	})",
 		"end",
 		"core.register_alias(\"mobs:{0}\", \"spawneggs:{0}\")".format(mob_name),
@@ -157,6 +157,9 @@ def updateConf():
 		li = lines[idx]
 		if li.startswith("name ="):
 			lines[idx] = "name = {}".format(mob_name)
+		elif li.startswith("depends ="):
+			if "stone_monster" not in li.replace(" ", "").split("=")[1].split(","):
+				lines[idx] = lines[idx] + ", stone_monster"
 		elif li.startswith("optional_depends ="):
 			if "asm_spawneggs" not in li.replace(" ", "").split("=")[1].split(","):
 				lines[idx] = lines[idx] + ", asm_spawneggs"
@@ -205,9 +208,10 @@ if __name__ == "__main__":
 	download(getRefUrl("license.txt"))
 
 	# models
-	if not os.path.exists("models"):
-		os.mkdir("models")
-	download(getRefUrl("models/mobs_{}.b3d".format(mob_name)), "models/mobs_{}.b3d".format(mob_name))
+	# uses `mobs_stone_monster.b3d`
+	# ~ if not os.path.exists("models"):
+		# ~ os.mkdir("models")
+	# ~ download(getRefUrl("models/mobs_{}.b3d".format(mob_name)), "models/mobs_{}.b3d".format(mob_name))
 
 	# sounds
 	if not os.path.exists("sounds"):
